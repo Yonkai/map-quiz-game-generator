@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import HongKongModified from "./custom-map-test/hong-kong-modified/index";
+import PlainMapTest from "./custom-map-test/plain-map-test/index";
 import { CheckboxSVGMap } from "react-svg-map";
 import "./App.css";
 
@@ -26,7 +26,7 @@ class App extends Component {
         <div className='svg-map-grid-item'>
       <h1 className>Hong Kong Geography Quiz Game</h1>
         {/* {this.state.map()} */}
-        <CheckboxSVGMap map={HongKongModified} onChange={(e) => this.handleClick(e)}/>
+        <CheckboxSVGMap map={PlainMapTest} onChange={(e) => this.handleClick(e)}/>
           <h2>{`Click on <randomly selected area>`}</h2>
           <ul>
           {this.state.regionsClicked.map((name,index)=>{
