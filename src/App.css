@@ -1,38 +1,47 @@
-.App {
-  text-align: center;
+.svg-map {
+  width: 100%;
+  margin:0 auto;
+  height: auto;
+  stroke: #666;
+  border:1px solid black;
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round; }
+  .svg-map__location {
+    fill: #a1d99b;
+    cursor: pointer; }
+    .svg-map__location:focus, .svg-map__location:hover {
+      fill: #b8e2b3;
+      outline: 0; }
+    .svg-map__location[aria-checked=true] {
+      fill: #f4bc44; }
+
+body{
+  background:#6277a6;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.main-container{
+  width:100%;
+  display:grid;
+  justify-items:center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.svg-map-grid-item{
+  width:100%;
+  max-width:1200px;
+  max-height:400px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+li{
+  display:inline-block;
+  margin-left:10px;
+  color:white;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+h1{
+  font-size:26px;
+  background:yellow;
+  margin-top:3px;
+  margin-bottom:3px;
+  justify-self:start;
 }
