@@ -61,9 +61,15 @@ class App extends Component {
       }), () => {
         // Callback after setting state from region clicking, this is to prevent race conditions.
         console.log('Region clicked callback calledbacked.')
-        // If the player guesses incorrectly
+        // If the player guesses incorrectly by the last interacted with region NOT BEING the 
+        // 'guessThis' set inside initiateMapGame and recalculate the score
+
         
-        // If the player guesses correctly
+        // If the player guesses correctly by the last interacted with region BEING the 
+        // 'guessThis' set inside initiateMapGame and recalculate the score
+
+        // If the player has guessed incorrectly more than 5 times in a row, cause the area that is the correct
+        // region to begin flashing
       });
 
 
@@ -127,15 +133,22 @@ class App extends Component {
           {/* TODO steps for setting up with test-map:
               1. Each area intitially starts out same color representing not gussed yet. (green) 1
               1.5 Start button initiates the game, initating various state values like the timer, score, guess order array, and more? 1
-              2. After a 1st CORRECT guess the area turns white. 0
-              3. After a 2nd-4th CORRECT guess the area turns blue. 0vb
-              4. After a 5th+ CORRECT guess the area turns red. 0
-              5. When 5 incorrect guesses are made in a row area flashes showing the correct area. 0
               6. A name appears over the area if it is incorrectly guessed, showings its name. 0
               7. The name that needs to be guessed follows the cursor. 0
-              8. After every area has been given a guess a popover(modal?) appears and shows the score
-                 and ranking. 0
+              8. After every area has been given a correct guess a popover(modal?) appears and shows the score
+                 and ranking, the game is set back to the initial state after the user clicks away via. 
               9. Reset button can reset everything to initial state
+
+              ---------
+              Needed map color condition states, add text messages alongside to guide player:
+              - The map and start button has not be interacted with at all: all regions solid white. 1
+              - A region is hovered before start button has been hit: turns red while hovered. 1
+              - A region is hovered after start button has been hit: turns light green.
+
+              - A region is checked after start button has been hit and the guess is correct: that region turns dark green
+               until the end game where it is reset.
+              - A region is checked after start button has been hit and the guess is incorrect: that region flashes its name quickly
+              above the region of the click for 1 second before going back to solid white until the end game where it is reset
           */}
           <ul>
           {this.state.regionsClicked.map((name,index)=>{
@@ -148,24 +161,26 @@ class App extends Component {
             .svg-map {
               width: 100%;
               height: auto;
-              stroke: #666;
+              stroke: black;
               border:1px solid black;
               stroke-width: 5;
               stroke-linecap: round;
               stroke-linejoin: round; }
               .svg-map__location {
-                fill: #a1d99b;
-                cursor: pointer; }
+                fill: white;
+                cursor: pointer; 
+              }
                 .svg-map__location:focus, .svg-map__location:hover {
-                  fill: #b8e2b3;
-                  outline: 0; }
+                  fill: red;
+                  outline: 0; 
+                }
                 .svg-map__location[aria-checked=true] 
                 {
                   fill: #f4bc44; 
                 }
 
             body{
-              background:#6277a6;
+              background:white;
             }
 
             .main-container{
@@ -182,21 +197,21 @@ class App extends Component {
             li{
               display:inline-block;
               margin-left:10px;
-              color:white;
+              color:black;
             }
 
             h1{
               font-size:26px;
               width: 100%; 
               justify-self:start;
-              background:yellow;
+              background:white;
               margin-top:3px;
               margin-bottom:0;
               text-align:center;
             }
 
             p{
-              color:white;
+              color:black;
               margin:0;
             }
     `}</style>
