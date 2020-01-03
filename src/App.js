@@ -17,6 +17,7 @@ class App extends Component {
       lastRegionClicked:[],
       shuffledGuessList:false,
       alreadyCorrectlyGuessedMapRegions:false,
+      lastIncorrectGuess:false,
       currentGameScore:100,
       gameStarted:false,
       gameFinished: false,
@@ -73,6 +74,13 @@ class App extends Component {
         // 'guessThis' set inside initiateMapGame, recalculate the score
         if(this.state.lastRegionClicked[0] !== this.state.guessThis){
           console.log('that guess was incorrect')
+         // 1 Update state value that contains last incorrect guess to dynamically render the CSS animation for wrong guesses
+          const nextIncorrectGuess = this.state.lastRegionClicked[0]
+
+        // 2. Update state from step 1
+        this.setState(prevState => ({
+          lastIncorrectGuess:nextIncorrectGuess
+        }))
         }
         // If the player guesses correctly by the last interacted with region BEING the 
         // 'guessThis' set inside initiateMapGame:
@@ -133,10 +141,12 @@ class App extends Component {
             guidePlayerMessage:`Click on ${initGuessThis}`,
             gameStarted:true,
             alreadyCorrectlyGuessedMapRegions:[],
+            lastIncorrectGuess:false
           }));
       }
     }
 
+    //TODO: End-game and start-game are broken... examine that logic. Add gate to prevent beginning logic? race conditions??
   render() {
     return (
     <div className='main-container'>
@@ -188,6 +198,7 @@ class App extends Component {
               above the region of the click for 1 second before going back to solid white until the end game where it is reset
           */}
           <ul>
+          {/* set key props here: */}
           {this.state.regionsClicked.map((name,index)=>{
             return <li>,'{name}',</li>
           })}
@@ -216,13 +227,10 @@ class App extends Component {
                   fill: ${this.state.gameStarted ? `lightgreen`:`red`};
                   outline: 0; 
                 }`}
-                .svg-map__location[aria-checked=true] 
-                {
-                  fill: #f4bc44; 
-                }
                 
-                ${generateLastIncorrectlyGuessedMapRegionsCSSRules(this.state.lastIncorrectGuess)}
+                // correct guesses should have precedence over incorrect guess via CSS rule ordering..
                 ${generateAlreadyCorrectlyGuessedMapRegionsCSSRules(this.state.alreadyCorrectlyGuessedMapRegions)}
+                ${generateLastIncorrectlyGuessedMapRegionsCSSRules(this.state.lastIncorrectGuess)}
             body{
               background:white;
             }

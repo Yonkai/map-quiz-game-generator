@@ -30,3 +30,5 @@ import App from './App';
 
 //TODO test: Make sure that when a correct guess is made, the shuffled list is lodash without'd from that guess to form a new
 // shuffled list in state.
+
+//TODO test: Make sure that the string interpolation util functions return expected output for given expected inputs
