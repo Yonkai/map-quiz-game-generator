@@ -3,7 +3,10 @@ import PlainMapTest from "./custom-map-test/plain-map-test/index";
 import { CheckboxSVGMap } from "react-svg-map";
 import shuffle from 'lodash/shuffle'
 import difference from 'lodash/difference'
+import union from 'lodash/union'
+import without from 'lodash/without'
 import Timer from 'react-compound-timer'
+import generateAlreadyCorrectlyGuessedMapRegionsCSSRules from './util/generateAlreadyCorrectlyGuessedMapRegionsCSSRules'
 
 class App extends Component {
   constructor(props) {
@@ -66,7 +69,7 @@ class App extends Component {
         console.log('Region clicked callback calledbacked.')
         // If the player guesses incorrectly by the last interacted with region NOT BEING the 
         // 'guessThis' set inside initiateMapGame, recalculate the score
-        if(false){
+        if(this.state.lastRegionClicked[0] !== this.state.guessThis){
           console.log('that guess was incorrect')
         }
         // If the player guesses correctly by the last interacted with region BEING the 
@@ -74,13 +77,29 @@ class App extends Component {
         else if(this.state.lastRegionClicked[0] === this.state.guessThis){
           console.log('that guess was correct!')
           // 1. remove the correctly guessed item from shuffledGuessList state array
-          // 2. select a new guessThis state value via the newly changed shuffleGuessList 
+          const updatedShuffleGuessList = without(this.state.shuffledGuessList,this.state.lastRegionClicked[0])
+          console.log(this.state.shuffledGuessList, 'prev. shuffledGuessList before being without\'d with lodash and correct guess.')
+          console.log(updatedShuffleGuessList, 'new, updated shuffleGuessList after have correct guess removed.')
+          // 2. select a new guessThis state value via the newly changed shuffleGuessList
+          // FIFO selection style
+          const nextGuessThis = updatedShuffleGuessList[0]
           // 3. update the guidePlayerMessage based on the newly selected guessThis state value vis the newly changed shuffleGuessList
-          // 4. add to a state array that contains all the already correctly guessed map regions in order to dynamically render the dark green coloring in the CSS 
-          // 5. update the score
+          const nextGuidePlayerMessage = `Click on ${nextGuessThis}`
+          // 4. update array that contains all the already correctly guessed map regions in order to dynamically render the dark green coloring in the CSS
+          const nextAlreadyCorrectlyGuessedMapRegions = union(this.state.alreadyCorrectlyGuessedMapRegions, this.state.lastRegionClicked)
 
-          // Update state:
+          console.log(nextAlreadyCorrectlyGuessedMapRegions, 'An array of already correctly guessed regions')
+          console.log(nextGuessThis, '(the next "Guess This" based on FIFO\'ing updated shuffle guess list)')
+          console.log(nextGuidePlayerMessage, '(based on new guessThis state value, tells player what to guess next.)')
+          // 5. TODO: update/recalculate the score
 
+          // 6. Update state from steps 1 -> 5:
+          this.setState(prevState => ({
+            shuffledGuessList:updatedShuffleGuessList,
+            guessThis: nextGuessThis,
+            guidePlayerMessage: nextGuidePlayerMessage,
+            alreadyCorrectlyGuessedMapRegions:nextAlreadyCorrectlyGuessedMapRegions
+          }))
         } else{
           // There should only be correct or incorrect guesses I think.
           console.error('Error something went wrong trying to figure out if the guess was correct or not')
@@ -189,7 +208,7 @@ class App extends Component {
                 cursor: pointer; 
               }
                 .svg-map__location:focus{
-                  fill:purple;
+                  fill:white;
                   outline:0;
                 }
                 
@@ -201,7 +220,8 @@ class App extends Component {
                 {
                   fill: #f4bc44; 
                 }
-
+                
+                ${generateAlreadyCorrectlyGuessedMapRegionsCSSRules(this.state.alreadyCorrectlyGuessedMapRegions)}
             body{
               background:white;
             }
@@ -237,6 +257,7 @@ class App extends Component {
               color:black;
               margin:0;
             }
+
     `}</style>
       </div>
       );

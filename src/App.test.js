@@ -24,4 +24,9 @@ import App from './App';
 
 //TODO test: Make sure that the timer resets after hitting reset button
 
-//TODO test: make sure that the score changes throughout the game
+//TODO test: Make sure that the score changes throughout the game
+
+//TODO test: Make sure that the color states are all correct for regions
+
+//TODO test: Make sure that when a correct guess is made, the shuffled list is lodash without'd from that guess to form a new
+// shuffled list in state.
