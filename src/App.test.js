@@ -1,9 +1,13 @@
 import React from 'react';
+import ReactDOM from 'react-dom'
 import { render } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 import App from './App';
 
-test('renders learn react link', () => {
-  const { getByText } = render(<App />);
-  const linkElement = getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
-});
+// TODO, read through docs throughly..
+// test('Make sure the main game map is visible', () => {
+//   const {queryByTestId} = render(<App/>);
+//   expect(
+//     queryByTestId(document.documentElement, 'game-header'),
+//   ).toBeInTheDocument()
+// });
