@@ -8,7 +8,10 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = { 
-      regionsClicked:[] 
+      regionsClicked:[],
+      shuffledGuessList:[],
+      currentGameScore:0,
+      gameStarted:false
     }
       // This binding is necessary to make `this` work in the callback
       this.handleMapRegionClick = this.handleMapRegionClick.bind(this);
@@ -16,24 +19,42 @@ class App extends Component {
     }
   
     handleMapRegionClick(e) {
+      console.log('handling specific region click.')
+      if(this.state.gameStarted){
       const regionsClickedSet = e.map((path,index)=> {
         return path.attributes[6].value;
       })
-      this.setState(regionsClicked => ({
+      this.setState(prevState => ({
         regionsClicked: regionsClickedSet
       }));
+    } else{
+      console.error('need to hit the start button to begin game.')
+    }
     } 
 
     initiateMapGame(){
-      console.log('iniating map game...');
-      //TODO: grab these dynamically
-      //declare constant for all area names 
-      const allAreaNames = ['path55','path65','path61','path85','path70','path74','path81','path72','path57','path83']
-      //init. shuffle area names array for guess order and set to state, use lodash to shuffle.
-      const shuffledAreaNames = shuffle(allAreaNames) 
-      //init. start timer and run via timer component first class function
-      //init. game scores and set to state
-      //set bool flag in state for handleMapRegionClick function conditional
+      //Note: When this function is called the Timer component start function is called alongside it.
+        console.log('iniating map game...');
+        //TODO: grab these dynamically
+        //declare constant for all area names 
+        const allAreaNames = ['path55','path65','path61','path85','path70','path74','path81','path72','path57','path83']
+        //init. shuffle area names array for guess order and set to state, use lodash to shuffle.
+        const shuffledAreaNames = shuffle(allAreaNames) 
+        //set shuffled guess list to state
+        this.setState(prevState => ({
+          shuffledGuessList: shuffledAreaNames
+        }));
+        //init. game scores and set to state
+        const initialGameScore = 100;
+        this.setState(prevState => ({
+          currentGameScore: initialGameScore
+        }));
+        //set bool flag in state for handleMapRegionClick function conditional
+        const gameStartedFlag=true;
+        this.setState(prevState => ({
+          gameStarted: gameStartedFlag
+        }));
+
     }
 
   render() {
@@ -67,11 +88,9 @@ class App extends Component {
         )}
     </Timer>
           <p>{`Click on <randomly selected area>`}</p>
-        <button onClick={this.initiateMapGame}>{`Start button`}</button>
-        <button>{`Reset button`}</button>
           {/* TODO steps for setting up with test-map:
               1. Each area intitially starts out same color representing not gussed yet. (green) 1
-              1.5 Start button initiates the game, initating various state values like the timer, score, guess order array, and more?
+              1.5 Start button initiates the game, initating various state values like the timer, score, guess order array, and more? 1
               2. After a 1st CORRECT guess the area turns white. 0
               3. After a 2nd-4th CORRECT guess the area turns blue. 0vb
               4. After a 5th+ CORRECT guess the area turns red. 0
