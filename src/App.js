@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PlainMapTest from "./custom-map-test/plain-map-test/index";
 import { CheckboxSVGMap } from "react-svg-map";
 import shuffle from 'lodash/shuffle'
+import difference from 'lodash/difference'
 import Timer from 'react-compound-timer'
 
 class App extends Component {
@@ -9,9 +10,12 @@ class App extends Component {
     super(props);
     this.state = { 
       regionsClicked:[],
-      shuffledGuessList:[],
-      currentGameScore:0,
-      gameStarted:false
+      lastRegionClicked:[],
+      shuffledGuessList:false,
+      currentGameScore:100,
+      gameStarted:false,
+      gameFinished: false,
+      guidePlayerMessage:'Click Start to begin.',
     }
       // This binding is necessary to make `this` work in the callback
       this.handleMapRegionClick = this.handleMapRegionClick.bind(this);
@@ -20,52 +24,80 @@ class App extends Component {
   
     handleMapRegionClick(e) {
       console.log('handling specific region click.')
-      if(this.state.gameStarted){
-      const regionsClickedSet = e.map((path,index)=> {
-        return path.attributes[6].value;
-      })
-      this.setState(prevState => ({
-        regionsClicked: regionsClickedSet
+      // Check to see if game as been started
+      if(this.state.gameStarted && (!this.state.gameFinished)){
+        console.log(e,'event')
+        
+        
+        // Init regions clicked set
+        // Grab the names of the map from the event
+        const regionsClickedSet = e.map((path, index)=> {
+          return path.attributes[6].value;
+        })
+        //Get last clicked region by finding the last removed or added item from regionsClickedSet
+        let lastRegionClicked = 'none'
+        console.log(regionsClickedSet.length, 'notstate');
+        console.log(this.state.regionsClicked.length, 'state');
+
+        // An item was added
+        if(regionsClickedSet.length > this.state.regionsClicked.length){
+        // If item gets added difference the new array against old array to get last clicked region
+        lastRegionClicked = difference(regionsClickedSet,this.state.regionsClicked)
+        console.log('An item has been added')
+
+        // And if an item was removed:
+        } else if(regionsClickedSet.length < this.state.regionsClicked.length){
+        // If item gets removed difference the old array against the new array to get last clicked region
+        lastRegionClicked = difference(this.state.regionsClicked,regionsClickedSet)
+        console.log('An item has been removed')
+        }
+        else {
+          console.error('error')
+        }
+        
+        this.setState(prevState => ({
+        regionsClicked: regionsClickedSet,
+        lastRegionClicked: lastRegionClicked,
       }));
+
+      // If the player guesses correctly
+
+      // If the player guesses incorrectly
+      
     } else{
-      console.error('need to hit the start button to begin game.')
+      console.log('game not initialized')
     }
     } 
 
     initiateMapGame(){
-      //Note: When this function is called the Timer component start function is called alongside it.
-        console.log('iniating map game...');
-        //TODO: grab these dynamically
-        //declare constant for all area names 
-        const allAreaNames = ['path55','path65','path61','path85','path70','path74','path81','path72','path57','path83']
-        //init. shuffle area names array for guess order and set to state, use lodash to shuffle.
-        const shuffledAreaNames = shuffle(allAreaNames) 
-        //set shuffled guess list to state
-        this.setState(prevState => ({
-          shuffledGuessList: shuffledAreaNames
-        }));
-        //init. game scores and set to state
-        const initialGameScore = 100;
-        this.setState(prevState => ({
-          currentGameScore: initialGameScore
-        }));
-        //set bool flag in state for handleMapRegionClick function conditional
-        const gameStartedFlag=true;
-        this.setState(prevState => ({
-          gameStarted: gameStartedFlag
-        }));
+        console.log('Init map game.');
+        // Note: When this function is called the Timer component start function is called alongside it.
 
+        if(!(this.state.shuffledGuessList)){
+          // Declare constant for all area names 
+          //TODO: grab these dynamically
+          const allAreaNames = ['path55','path65','path61','path85','path70','path74','path81','path72','path57','path83']
+          const shuffledAreaNames = shuffle(allAreaNames)
+          // FIFO selection style
+          const initGuessThis = shuffledAreaNames[0]
+          // Set shuffled guess list, initial guess, guide message, and game start flag to state.
+          this.setState(prevState => ({
+            shuffledGuessList: shuffledAreaNames,
+            guessThis:initGuessThis,
+            guidePlayerMessage:`Click on ${initGuessThis}`,
+            gameStarted:true
+          }));
+      }
     }
 
   render() {
-    const allAreaNames = ['path55','path65','path61','path85','path70','path74','path81','path72','path57','path83']
     return (
     <div className='main-container'>
         <div className='svg-map-grid-item'>
       <h1 className='game-header' data-testid="game-header">Geography Quiz Game</h1>
         {/* {this.state.map()} */}
         <CheckboxSVGMap map={PlainMapTest} onChange={(e) => this.handleMapRegionClick(e)}/>
-          <p>{`% correct <total guesses/current guess position in names being looped through)>`}</p>
+          <p>{`Current Score: ${this.state.currentGameScore}%`}</p>
         <Timer
         initialTime={0}
         startImmediately={false}
@@ -81,13 +113,13 @@ class App extends Component {
                 <br />
                 <div>
                   {/* Note to self: I thought the correct context was this.props not this.. oops. */}
-                    <button onClick={()=>{this.initiateMapGame();start();}}>Start Game</button>
-                    <button onClick={reset}>Reset Game</button>
+                    <button onClick={()=>{this.initiateMapGame();start();}}>Start</button>
+                    <button onClick={reset}>Reset</button>
                 </div>
             </React.Fragment>
         )}
     </Timer>
-          <p>{`Click on <randomly selected area>`}</p>
+          <p>{this.state.guidePlayerMessage}</p>
           {/* TODO steps for setting up with test-map:
               1. Each area intitially starts out same color representing not gussed yet. (green) 1
               1.5 Start button initiates the game, initating various state values like the timer, score, guess order array, and more? 1
