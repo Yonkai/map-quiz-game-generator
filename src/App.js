@@ -12,10 +12,12 @@ class App extends Component {
       regionsClicked:[],
       lastRegionClicked:[],
       shuffledGuessList:false,
+      alreadyCorrectlyGuessedMapRegions:false,
       currentGameScore:100,
       gameStarted:false,
       gameFinished: false,
       guidePlayerMessage:'Click Start to begin.',
+      guessThis:''
     }
       // This binding is necessary to make `this` work in the callback
       this.handleMapRegionClick = this.handleMapRegionClick.bind(this);
@@ -59,15 +61,30 @@ class App extends Component {
         regionsClicked: regionsClickedSet,
         lastRegionClicked: lastRegionClicked,
       }), () => {
+        // Processing what to do after a region has been clicked.
         // Callback after setting state from region clicking, this is to prevent race conditions.
         console.log('Region clicked callback calledbacked.')
         // If the player guesses incorrectly by the last interacted with region NOT BEING the 
-        // 'guessThis' set inside initiateMapGame and recalculate the score
-
-        
+        // 'guessThis' set inside initiateMapGame, recalculate the score
+        if(false){
+          console.log('that guess was incorrect')
+        }
         // If the player guesses correctly by the last interacted with region BEING the 
-        // 'guessThis' set inside initiateMapGame and recalculate the score
+        // 'guessThis' set inside initiateMapGame:
+        else if(this.state.lastRegionClicked[0] === this.state.guessThis){
+          console.log('that guess was correct!')
+          // 1. remove the correctly guessed item from shuffledGuessList state array
+          // 2. select a new guessThis state value via the newly changed shuffleGuessList 
+          // 3. update the guidePlayerMessage based on the newly selected guessThis state value vis the newly changed shuffleGuessList
+          // 4. add to a state array that contains all the already correctly guessed map regions in order to dynamically render the dark green coloring in the CSS 
+          // 5. update the score
 
+          // Update state:
+
+        } else{
+          // There should only be correct or incorrect guesses I think.
+          console.error('Error something went wrong trying to figure out if the guess was correct or not')
+        }
         // If the player has guessed incorrectly more than 5 times in a row, cause the area that is the correct
         // region to begin flashing
       });
@@ -95,7 +112,8 @@ class App extends Component {
             shuffledGuessList: shuffledAreaNames,
             guessThis:initGuessThis,
             guidePlayerMessage:`Click on ${initGuessThis}`,
-            gameStarted:true
+            gameStarted:true,
+            alreadyCorrectlyGuessedMapRegions:[],
           }));
       }
     }
@@ -143,10 +161,10 @@ class App extends Component {
               Needed map color condition states, add text messages alongside to guide player:
               - The map and start button has not be interacted with at all: all regions solid white. 1
               - A region is hovered before start button has been hit: turns red while hovered. 1
-              - A region is hovered after start button has been hit: turns light green.
+              - A region is hovered after start button has been hit: turns light green. 1
 
               - A region is checked after start button has been hit and the guess is correct: that region turns dark green
-               until the end game where it is reset.
+               until the end-game where it is reset back to initial properties.
               - A region is checked after start button has been hit and the guess is incorrect: that region flashes its name quickly
               above the region of the click for 1 second before going back to solid white until the end game where it is reset
           */}
@@ -170,10 +188,15 @@ class App extends Component {
                 fill: white;
                 cursor: pointer; 
               }
-                .svg-map__location:focus, .svg-map__location:hover {
-                  fill: red;
-                  outline: 0; 
+                .svg-map__location:focus{
+                  fill:purple;
+                  outline:0;
                 }
+                
+                ${`.svg-map__location:hover {
+                  fill: ${this.state.gameStarted ? `lightgreen`:`red`};
+                  outline: 0; 
+                }`}
                 .svg-map__location[aria-checked=true] 
                 {
                   fill: #f4bc44; 
