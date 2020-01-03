@@ -7,6 +7,7 @@ import union from 'lodash/union'
 import without from 'lodash/without'
 import Timer from 'react-compound-timer'
 import generateAlreadyCorrectlyGuessedMapRegionsCSSRules from './util/generateAlreadyCorrectlyGuessedMapRegionsCSSRules'
+import generateLastIncorrectlyGuessedMapRegionsCSSRules from './util/generateLastIncorrectlyGuessedMapRegionsCSSRules'
 
 class App extends Component {
   constructor(props) {
@@ -41,8 +42,9 @@ class App extends Component {
         })
         //Get last clicked region by finding the last removed or added item from regionsClickedSet
         let lastRegionClicked = 'none'
-        console.log(regionsClickedSet.length, 'notstate');
-        console.log(this.state.regionsClicked.length, 'state');
+        console.log(regionsClickedSet.length, 'The new regionsClickedSet not in state and its length');
+        console.log(this.state.regionsClicked.length, 'The regionsClicked in state and its length');
+        console.log(' The regions clicked arrays for both newly generate are used for finding the last clicked region.')
 
         // An item was added
         if(regionsClickedSet.length > this.state.regionsClicked.length){
@@ -107,8 +109,6 @@ class App extends Component {
         // If the player has guessed incorrectly more than 5 times in a row, cause the area that is the correct
         // region to begin flashing
       });
-
-
       
     } else{
       console.log('game not initialized')
@@ -173,8 +173,8 @@ class App extends Component {
               6. A name appears over the area if it is incorrectly guessed, showings its name. 0
               7. The name that needs to be guessed follows the cursor. 0
               8. After every area has been given a correct guess a popover(modal?) appears and shows the score
-                 and ranking, the game is set back to the initial state after the user clicks away via. 
-              9. Reset button can reset everything to initial state
+                 and ranking, the game is set back to the initial state after the user clicks away via. reset function
+              9. Reset button can reset everything to initial state 0
 
               ---------
               Needed map color condition states, add text messages alongside to guide player:
@@ -182,8 +182,8 @@ class App extends Component {
               - A region is hovered before start button has been hit: turns red while hovered. 1
               - A region is hovered after start button has been hit: turns light green. 1
 
-              - A region is checked after start button has been hit and the guess is correct: that region turns dark green
-               until the end-game where it is reset back to initial properties.
+              - A region is checked after start button has been hit and the guess is correct: that region turns dark green 1
+               until the end-game where it is reset back to initial properties. 0
               - A region is checked after start button has been hit and the guess is incorrect: that region flashes its name quickly
               above the region of the click for 1 second before going back to solid white until the end game where it is reset
           */}
@@ -221,6 +221,7 @@ class App extends Component {
                   fill: #f4bc44; 
                 }
                 
+                ${generateLastIncorrectlyGuessedMapRegionsCSSRules(this.state.lastIncorrectGuess)}
                 ${generateAlreadyCorrectlyGuessedMapRegionsCSSRules(this.state.alreadyCorrectlyGuessedMapRegions)}
             body{
               background:white;
