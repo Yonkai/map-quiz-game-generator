@@ -58,11 +58,15 @@ class App extends Component {
         this.setState(prevState => ({
         regionsClicked: regionsClickedSet,
         lastRegionClicked: lastRegionClicked,
-      }));
+      }), () => {
+        // Callback after setting state from region clicking, this is to prevent race conditions.
+        console.log('Region clicked callback calledbacked.')
+        // If the player guesses incorrectly
+        
+        // If the player guesses correctly
+      });
 
-      // If the player guesses correctly
 
-      // If the player guesses incorrectly
       
     } else{
       console.log('game not initialized')
