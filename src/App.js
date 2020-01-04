@@ -16,8 +16,8 @@ class App extends Component {
       regionsClicked:[],
       lastRegionClicked:[],
       shuffledGuessList:false,
-      alreadyCorrectlyGuessedMapRegions:false,
-      lastIncorrectGuess:false,
+      alreadyCorrectlyGuessedMapRegions:'initialValue',
+      lastIncorrectGuess:'initialValue',
       currentGameScore:100,
       gameStarted:false,
       gameFinished: false,
@@ -27,6 +27,7 @@ class App extends Component {
       // This binding is necessary to make `this` work in the callback
       this.handleMapRegionClick = this.handleMapRegionClick.bind(this);
       this.initiateMapGame= this.initiateMapGame.bind(this);
+      this.resetMapGame= this.resetMapGame.bind(this);
     }
   
     handleMapRegionClick(e) {
@@ -135,15 +136,31 @@ class App extends Component {
           // FIFO selection style
           const initGuessThis = shuffledAreaNames[0]
           // Set shuffled guess list, initial guess, guide message, and game start flag to state.
+          // alreadyCorrectlyGuessedMapRegions and lastIncorrectGuess set here for reference
           this.setState(prevState => ({
             shuffledGuessList: shuffledAreaNames,
             guessThis:initGuessThis,
             guidePlayerMessage:`Click on ${initGuessThis}`,
             gameStarted:true,
-            alreadyCorrectlyGuessedMapRegions:[],
-            lastIncorrectGuess:false
+            alreadyCorrectlyGuessedMapRegions:'initialValue',
+            lastIncorrectGuess:'initialValue'
           }));
       }
+    }
+
+    resetMapGame(){
+      this.setState(prevState => ({
+          regionsClicked:[],
+          lastRegionClicked:[],
+          shuffledGuessList:false,
+          alreadyCorrectlyGuessedMapRegions:'initialValue',
+          lastIncorrectGuess:'initialValue',
+          currentGameScore:100,
+          gameStarted:false,
+          gameFinished: false,
+          guidePlayerMessage:'Click Start to begin.',
+          guessThis:''
+        }));
     }
 
     //TODO: End-game and start-game are broken... examine that logic. Add gate to prevent beginning logic? race conditions??
@@ -158,7 +175,6 @@ class App extends Component {
         <Timer
         initialTime={0}
         startImmediately={false}
-        initiateMapGame={this.initiateMapGame}
     >
     {({ start, resume, pause, stop, reset, timerState, initiateMapGame }) => (
             <React.Fragment>
@@ -171,7 +187,7 @@ class App extends Component {
                 <div>
                   {/* Note to self: I thought the correct context was this.props not this.. oops. */}
                     <button onClick={()=>{this.initiateMapGame();start();}}>Start</button>
-                    <button onClick={reset}>Reset</button>
+                    <button onClick={()=>{this.resetMapGame();reset();}}>Reset</button>
                 </div>
             </React.Fragment>
         )}
@@ -223,14 +239,6 @@ class App extends Component {
                   outline:0;
                 }
                 
-                ${`.svg-map__location:hover {
-                  fill: ${this.state.gameStarted ? `lightgreen`:`red`};
-                  outline: 0; 
-                }`}
-                
-                // correct guesses should have precedence over incorrect guess via CSS rule ordering..
-                ${generateAlreadyCorrectlyGuessedMapRegionsCSSRules(this.state.alreadyCorrectlyGuessedMapRegions)}
-                ${generateLastIncorrectlyGuessedMapRegionsCSSRules(this.state.lastIncorrectGuess)}
             body{
               background:white;
             }
@@ -268,6 +276,16 @@ class App extends Component {
             }
 
     `}</style>
+         <style jsx>{`
+          ${`.svg-map__location:hover {
+            fill: ${this.state.gameStarted ? `lightgreen`:`red`};
+            outline: 0; 
+          }`}
+          
+          // correct guesses should have precedence over incorrect guess via CSS rule ordering..
+          ${generateAlreadyCorrectlyGuessedMapRegionsCSSRules(this.state.alreadyCorrectlyGuessedMapRegions)}
+          ${generateLastIncorrectlyGuessedMapRegionsCSSRules(this.state.lastIncorrectGuess)}
+     `}</style>
       </div>
       );
   }

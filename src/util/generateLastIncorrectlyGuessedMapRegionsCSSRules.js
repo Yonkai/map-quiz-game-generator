@@ -1,5 +1,6 @@
-function generateLastIncorrectlyGuessedMapRegionsCSSRules(lastIncorrectGuess){
-    console.log('generateLastIncorrectlyGuessedMapRegionsCSSRules', ' has been called.')
+const generateLastIncorrectlyGuessedMapRegionsCSSRules = (lastIncorrectGuess) => {
+  if(lastIncorrectGuess !== 'initialValue'){  
+  console.log('generateLastIncorrectlyGuessedMapRegionsCSSRules', ' has been called.')
     console.log(lastIncorrectGuess, 'the last incorrect guess from main game, used here for generated styles with each state update.')
     // Make css rules up based on last incorrect guesse if any incorrect guesses have been made thus far
     // Use CSS3 animation
@@ -17,9 +18,13 @@ function generateLastIncorrectlyGuessedMapRegionsCSSRules(lastIncorrectGuess){
             }
           }
     }`: ``
+    console.log(generatedCSS)
     // Return the string to be used in the styled-jsx interpolated CSS animation if any incorrect guess have been made
     // otherwise return an empty string
-    return generatedCSS 
+    return generatedCSS
+  } else {
+    return ``;
+  }
 }
 
 export default generateLastIncorrectlyGuessedMapRegionsCSSRules;

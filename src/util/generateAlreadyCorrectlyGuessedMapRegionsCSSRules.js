@@ -1,6 +1,7 @@
 import join from 'lodash/join'
 
-function generateAlreadyCorrectlyGuessedMapRegionsCSSRules(correctGuesses){
+const generateAlreadyCorrectlyGuessedMapRegionsCSSRules = (correctGuesses) => {
+    if(correctGuesses !== 'initialValue'){
     console.log('generateAlreadyCorrectlyGuessedMapRegionsCSSRules', ' has been called.')
     console.log(correctGuesses, 'correct guesses assembled during the main game, used here for generated styles with each state update.')
     // Make css rules up based on correct guesses if any correct guesses have been made thus far
@@ -12,6 +13,9 @@ function generateAlreadyCorrectlyGuessedMapRegionsCSSRules(correctGuesses){
     // Return the string to be used in the styled-jsx interpolated CSS if any correct guesses have been made
     // otherwise return an emptry string
     return correctGuesses.length ? assembledGeneratedCSS : ``
+  } else{
+      return ``
+  }
 }
 
 export default generateAlreadyCorrectlyGuessedMapRegionsCSSRules;
