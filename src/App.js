@@ -119,7 +119,7 @@ class App extends Component {
         // region to begin flashing
       });
       
-    } else{
+    } else {
       console.log('game not initialized')
     }
     } 
@@ -276,19 +276,19 @@ class App extends Component {
             }
 
     `}</style>
-         <style jsx>{`
+      <style jsx>{`
           ${`.svg-map__location:hover {
             fill: ${this.state.gameStarted ? `lightgreen`:`red`};
             outline: 0; 
           }`}
           
-          // correct guesses should have precedence over incorrect guess via CSS rule ordering..
+          /* correct guesses should have precedence over incorrect guess via CSS rule ordering.. */  
           ${generateAlreadyCorrectlyGuessedMapRegionsCSSRules(this.state.alreadyCorrectlyGuessedMapRegions)}
           ${generateLastIncorrectlyGuessedMapRegionsCSSRules(this.state.lastIncorrectGuess)}
-     `}</style>
+        `}
+     </style>
       </div>
       );
-  }
-}
+    }
  
 export default App;
