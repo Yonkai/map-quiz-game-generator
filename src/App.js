@@ -28,6 +28,7 @@ class App extends Component {
       this.handleMapRegionClick = this.handleMapRegionClick.bind(this);
       this.initiateMapGame= this.initiateMapGame.bind(this);
       this.resetMapGame= this.resetMapGame.bind(this);
+      this.svgMap = React.createRef();
     }
   
     handleMapRegionClick(e) {
@@ -36,10 +37,10 @@ class App extends Component {
       if(this.state.gameStarted && (!this.state.gameFinished)){
         console.log(e,'event')
         
-        
         // Init regions clicked set
         // Grab the names of the map from the event
-        const regionsClickedSet = e.map((path, index)=> {
+        //TODO:reset checkboxes after each reset button click, this assumes each game begins with all map svg's unchecked/false.
+        const regionsClickedSet = e.map((path, index) => {
           return path.attributes[6].value;
         })
         //Get last clicked region by finding the last removed or added item from regionsClickedSet
@@ -130,8 +131,9 @@ class App extends Component {
 
         if(!(this.state.shuffledGuessList)){
           // Declare constant for all area names 
-          //TODO: grab these dynamically
-          const allAreaNames = ['path55','path65','path61','path85','path70','path74','path81','path72','path57','path83']
+          const allAreaNames = this.svgMap.current.props.map.locations.map((obj,index)=>{return obj.name})
+          console.log(this.svgMap.current)
+          //reset all aria-checked to false
           const shuffledAreaNames = shuffle(allAreaNames)
           // FIFO selection style
           const initGuessThis = shuffledAreaNames[0]
@@ -168,9 +170,8 @@ class App extends Component {
     return (
     <div className='main-container'>
         <div className='svg-map-grid-item'>
-      <h1 className='game-header' data-testid="game-header">Geography Quiz Game</h1>
         {/* {this.state.map()} */}
-        <CheckboxSVGMap map={PlainMapTest} onChange={(e) => this.handleMapRegionClick(e)}/>
+        <CheckboxSVGMap ref={this.svgMap} map={PlainMapTest} onChange={(e) => this.handleMapRegionClick(e)}/>
           <p>{`Current Score: ${this.state.currentGameScore}%`}</p>
         <Timer
         initialTime={0}
@@ -220,7 +221,6 @@ class App extends Component {
           })}
           </ul>
 
-        </div>
         <style jsx>{`
             .svg-map {
               width: 100%;
@@ -288,7 +288,9 @@ class App extends Component {
         `}
      </style>
       </div>
+      </div>
       );
     }
+}
  
 export default App;

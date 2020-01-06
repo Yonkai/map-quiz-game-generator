@@ -32,3 +32,5 @@ import App from './App';
 // shuffled list in state.
 
 //TODO test: Make sure that the string interpolation util functions return expected output for given expected inputs
+
+//TODO play through thousands/millions of games to check for error programmitcally.
