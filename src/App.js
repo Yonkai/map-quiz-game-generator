@@ -6,6 +6,7 @@ import difference from 'lodash/difference'
 import union from 'lodash/union'
 import without from 'lodash/without'
 import Timer from 'react-compound-timer'
+import ReactTooltip from 'react-tooltip'
 import generateAlreadyCorrectlyGuessedMapRegionsCSSRules from './util/generateAlreadyCorrectlyGuessedMapRegionsCSSRules'
 import generateLastIncorrectlyGuessedMapRegionsCSSRules from './util/generateLastIncorrectlyGuessedMapRegionsCSSRules'
 
@@ -28,6 +29,7 @@ class App extends Component {
       this.handleMapRegionClick = this.handleMapRegionClick.bind(this);
       this.initiateMapGame= this.initiateMapGame.bind(this);
       this.resetMapGame= this.resetMapGame.bind(this);
+      this.isLocationSelected = this.isLocationSelected.bind(this)
       this.svgMap = React.createRef();
     }
   
@@ -129,7 +131,9 @@ class App extends Component {
         console.log('Init map game.');
         // Note: When this function is called the Timer component start function is called alongside it.
 
+        
         if(!(this.state.shuffledGuessList)){
+
           // Declare constant for all area names 
           const allAreaNames = this.svgMap.current.props.map.locations.map((obj,index)=>{return obj.name})
           console.log(this.svgMap.current)
@@ -151,6 +155,7 @@ class App extends Component {
     }
 
     resetMapGame(){
+      
       this.setState(prevState => ({
           regionsClicked:[],
           lastRegionClicked:[],
@@ -165,13 +170,21 @@ class App extends Component {
         }));
     }
 
+    isLocationSelected(location,index){
+      console.log('test')
+      return true;
+    }
+
     //TODO: End-game and start-game are broken... examine that logic. Add gate to prevent beginning logic? race conditions??
   render() {
     return (
     <div className='main-container'>
-        <div className='svg-map-grid-item'>
+        <div className='svg-map-grid-item' data-tip data-for='happyFace' >
+        {this.state.guessThis !== '' ? <ReactTooltip id='happyFace' place="right" type="success">
+          <span>{`${this.state.guessThis}`}</span>
+        </ReactTooltip> : null }
         {/* {this.state.map()} */}
-        <CheckboxSVGMap ref={this.svgMap} map={PlainMapTest} onChange={(e) => this.handleMapRegionClick(e)}/>
+        <CheckboxSVGMap ref={this.svgMap} map={PlainMapTest} onChange={(e) => this.handleMapRegionClick(e)} isLocationSelected={this.isLocationSelected}/>
           <p>{`Current Score: ${this.state.currentGameScore}%`}</p>
         <Timer
         initialTime={0}
