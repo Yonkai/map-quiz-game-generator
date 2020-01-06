@@ -214,7 +214,7 @@ class App extends Component {
                 <div>
                   {/* Note to self: I thought the correct context was this.props not this.. oops. */}
                     <button onClick={()=>{this.initiateMapGame();start();}}>Start</button>
-                    <button onClick={()=>{this.resetMapGame();reset();}}>Reset</button>
+                    <button onClick={()=>{this.resetMapGame();reset();stop();}}>Reset</button>
                 </div>
             </React.Fragment>
         )}
