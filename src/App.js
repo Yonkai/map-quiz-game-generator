@@ -9,6 +9,7 @@ import Timer from 'react-compound-timer'
 import ReactTooltip from 'react-tooltip'
 import generateAlreadyCorrectlyGuessedMapRegionsCSSRules from './util/generateAlreadyCorrectlyGuessedMapRegionsCSSRules'
 import generateLastIncorrectlyGuessedMapRegionsCSSRules from './util/generateLastIncorrectlyGuessedMapRegionsCSSRules'
+import uuidv1 from 'uuid/v1';
 
 class App extends Component {
   constructor(props) {
@@ -23,26 +24,27 @@ class App extends Component {
       gameStarted:false,
       gameFinished: false,
       guidePlayerMessage:'Click Start to begin.',
-      guessThis:''
+      guessThis:'',
+      SVGMapKey: 342234
     }
       // This binding is necessary to make `this` work in the callback
       this.handleMapRegionClick = this.handleMapRegionClick.bind(this);
       this.initiateMapGame= this.initiateMapGame.bind(this);
       this.resetMapGame= this.resetMapGame.bind(this);
-      this.isLocationSelected = this.isLocationSelected.bind(this)
       this.svgMap = React.createRef();
     }
   
-    handleMapRegionClick(e) {
+    handleMapRegionClick(locations) {
       console.log('handling specific region click.')
+
       // Check to see if game as been started
       if(this.state.gameStarted && (!this.state.gameFinished)){
-        console.log(e,'event')
+        console.log(locations,'event')
         
         // Init regions clicked set
         // Grab the names of the map from the event
         //TODO:reset checkboxes after each reset button click, this assumes each game begins with all map svg's unchecked/false.
-        const regionsClickedSet = e.map((path, index) => {
+        const regionsClickedSet = locations.map((path, index) => {
           return path.attributes[6].value;
         })
         //Get last clicked region by finding the last removed or added item from regionsClickedSet
@@ -133,15 +135,21 @@ class App extends Component {
 
         
         if(!(this.state.shuffledGuessList)){
-
           // Declare constant for all area names 
           const allAreaNames = this.svgMap.current.props.map.locations.map((obj,index)=>{return obj.name})
           console.log(this.svgMap.current)
+          
           //reset all aria-checked to false
           const shuffledAreaNames = shuffle(allAreaNames)
+          
           // FIFO selection style
           const initGuessThis = shuffledAreaNames[0]
+
+          // Generate new svgmap key
+          const newSvgMapKey = uuidv1()
+
           // Set shuffled guess list, initial guess, guide message, and game start flag to state.
+          // Remount the svgmap component by changing the key so the aria-checkeds reset
           // alreadyCorrectlyGuessedMapRegions and lastIncorrectGuess set here for reference
           this.setState(prevState => ({
             shuffledGuessList: shuffledAreaNames,
@@ -149,13 +157,17 @@ class App extends Component {
             guidePlayerMessage:`Click on ${initGuessThis}`,
             gameStarted:true,
             alreadyCorrectlyGuessedMapRegions:'initialValue',
-            lastIncorrectGuess:'initialValue'
+            lastIncorrectGuess:'initialValue',
+            SVGMapKey:newSvgMapKey
+            
           }));
       }
     }
 
     resetMapGame(){
-      
+      // Generate new SVG Map key to remount component so that the aria-checkeds reset.
+      const newSvgMapKey = uuidv1();
+
       this.setState(prevState => ({
           regionsClicked:[],
           lastRegionClicked:[],
@@ -166,7 +178,8 @@ class App extends Component {
           gameStarted:false,
           gameFinished: false,
           guidePlayerMessage:'Click Start to begin.',
-          guessThis:''
+          guessThis:'',
+          SVGMapKey:newSvgMapKey
         }));
     }
 
@@ -179,12 +192,12 @@ class App extends Component {
   render() {
     return (
     <div className='main-container'>
-        <div className='svg-map-grid-item' data-tip data-for='happyFace' >
-        {this.state.guessThis !== '' ? <ReactTooltip id='happyFace' place="right" type="success">
+        <div className='svg-map-grid-item' data-tip data-for='svgMapItem' >
+        {this.state.guessThis !== '' ? <ReactTooltip id='svgMapItem' place="right" type="success">
           <span>{`${this.state.guessThis}`}</span>
         </ReactTooltip> : null }
         {/* {this.state.map()} */}
-        <CheckboxSVGMap ref={this.svgMap} map={PlainMapTest} onChange={(e) => this.handleMapRegionClick(e)} isLocationSelected={this.isLocationSelected}/>
+        <CheckboxSVGMap key={this.state.SVGMapKey} ref={this.svgMap} map={PlainMapTest} onChange={(locations) => this.handleMapRegionClick(locations)}/>
           <p>{`Current Score: ${this.state.currentGameScore}%`}</p>
         <Timer
         initialTime={0}
