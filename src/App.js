@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PlainMapTest from "./custom-map-test/plain-map-test/index";
+import usa from '@svg-maps/usa'
 import { CheckboxSVGMap } from "react-svg-map";
 import shuffle from 'lodash/shuffle'
 import difference from 'lodash/difference'
@@ -14,18 +15,20 @@ import uuidv1 from 'uuid/v1';
 class App extends Component {
   constructor(props) {
     super(props);
+    this.gameScoreIncrement = 500;
+
     this.state = { 
       regionsClicked:[],
       lastRegionClicked:[],
       shuffledGuessList:false,
       alreadyCorrectlyGuessedMapRegions:'initialValue',
       lastIncorrectGuess:'initialValue',
-      currentGameScore:100,
+      currentGameScore:0,
       gameStarted:false,
       gameFinished: false,
       guidePlayerMessage:'Click Start to begin.',
       guessThis:'',
-      SVGMapKey: 342234
+      SVGMapKey: 123456789
     }
       // This binding is necessary to make `this` work in the callback
       this.handleMapRegionClick = this.handleMapRegionClick.bind(this);
@@ -80,12 +83,16 @@ class App extends Component {
         // 'guessThis' set inside initiateMapGame, recalculate the score
         if(this.state.lastRegionClicked[0] !== this.state.guessThis){
           console.log('that guess was incorrect')
-         // 1 Update state value that contains last incorrect guess to dynamically render the CSS animation for wrong guesses
+         // 1. Update state value that contains last incorrect guess to dynamically render the CSS animation for wrong guesses
           const nextIncorrectGuess = this.state.lastRegionClicked[0]
 
-        // 2. Update state from step 1
+        // 2. Recalculate game score.
+          const nextGameScore = this.state.currentGameScore - this.gameScoreIncrement;  
+
+        // 3. Update state from step 1 and 2.
         this.setState(prevState => ({
-          lastIncorrectGuess:nextIncorrectGuess
+          lastIncorrectGuess:nextIncorrectGuess,
+          currentGameScore:nextGameScore
         }))
         }
         // If the player guesses correctly by the last interacted with region BEING the 
@@ -96,9 +103,10 @@ class App extends Component {
           const updatedShuffleGuessList = without(this.state.shuffledGuessList,this.state.lastRegionClicked[0])
           console.log(this.state.shuffledGuessList, 'prev. shuffledGuessList before being without\'d with lodash and correct guess.')
           console.log(updatedShuffleGuessList, 'new, updated shuffleGuessList after have correct guess removed.')
+          updatedShuffleGuessList.length === 0 ? console.log('Game finished. Nothing left to guess.') : console.log('You\'re still playing.')
           // 2. select a new guessThis state value via the newly changed shuffleGuessList
           // FIFO selection style
-          const nextGuessThis = updatedShuffleGuessList[0]
+          const nextGuessThis = updatedShuffleGuessList[0] ? updatedShuffleGuessList[0] : 'nothing, game done.'
           // 3. update the guidePlayerMessage based on the newly selected guessThis state value vis the newly changed shuffleGuessList
           const nextGuidePlayerMessage = `Click on ${nextGuessThis}`
           // 4. update array that contains all the already correctly guessed map regions in order to dynamically render the dark green coloring in the CSS
@@ -107,21 +115,22 @@ class App extends Component {
           console.log(nextAlreadyCorrectlyGuessedMapRegions, 'An array of already correctly guessed regions')
           console.log(nextGuessThis, '(the next "Guess This" based on FIFO\'ing updated shuffle guess list)')
           console.log(nextGuidePlayerMessage, '(based on new guessThis state value, tells player what to guess next.)')
-          // 5. TODO: update/recalculate the score
+         
+          // 5. Recalculate the score
+          const nextGameScore = this.state.currentGameScore + this.gameScoreIncrement;
 
           // 6. Update state from steps 1 -> 5:
           this.setState(prevState => ({
             shuffledGuessList:updatedShuffleGuessList,
             guessThis: nextGuessThis,
             guidePlayerMessage: nextGuidePlayerMessage,
-            alreadyCorrectlyGuessedMapRegions:nextAlreadyCorrectlyGuessedMapRegions
+            alreadyCorrectlyGuessedMapRegions:nextAlreadyCorrectlyGuessedMapRegions,
+            currentGameScore:nextGameScore
           }))
         } else{
-          // There should only be correct or incorrect guesses I think.
+          // There should only be correct or incorrect guesses.
           console.error('Error something went wrong trying to figure out if the guess was correct or not')
         }
-        // If the player has guessed incorrectly more than 5 times in a row, cause the area that is the correct
-        // region to begin flashing
       });
       
     } else {
@@ -133,7 +142,6 @@ class App extends Component {
         console.log('Init map game.');
         // Note: When this function is called the Timer component start function is called alongside it.
 
-        
         if(!(this.state.shuffledGuessList)){
           // Declare constant for all area names 
           const allAreaNames = this.svgMap.current.props.map.locations.map((obj,index)=>{return obj.name})
@@ -165,7 +173,7 @@ class App extends Component {
     }
 
     resetMapGame(){
-      // Generate new SVG Map key to remount component so that the aria-checkeds reset.
+      // Generate new SVG Map key to remount svg map component so that the aria-checkeds reset.
       const newSvgMapKey = uuidv1();
 
       this.setState(prevState => ({
@@ -174,7 +182,7 @@ class App extends Component {
           shuffledGuessList:false,
           alreadyCorrectlyGuessedMapRegions:'initialValue',
           lastIncorrectGuess:'initialValue',
-          currentGameScore:100,
+          currentGameScore:0,
           gameStarted:false,
           gameFinished: false,
           guidePlayerMessage:'Click Start to begin.',
@@ -198,7 +206,7 @@ class App extends Component {
         </ReactTooltip> : null }
         {/* {this.state.map()} */}
         <CheckboxSVGMap key={this.state.SVGMapKey} ref={this.svgMap} map={PlainMapTest} onChange={(locations) => this.handleMapRegionClick(locations)}/>
-          <p>{`Current Score: ${this.state.currentGameScore}%`}</p>
+          <p>{`Score: ${this.state.currentGameScore}`}</p>
         <Timer
         initialTime={0}
         startImmediately={false}
@@ -209,7 +217,7 @@ class App extends Component {
                     <Timer.Minutes /> min : 
                     <Timer.Seconds /> sec
                 </div>
-                <div>{timerState}</div>
+                {/* <div>{timerState}</div> */}
                 <br />
                 <div>
                   {/* Note to self: I thought the correct context was this.props not this.. oops. */}
@@ -253,7 +261,6 @@ class App extends Component {
               height: auto;
               stroke: black;
               border:1px solid black;
-              stroke-width: 5;
               stroke-linecap: round;
               stroke-linejoin: round; }
               .svg-map__location {
@@ -276,8 +283,8 @@ class App extends Component {
             }
 
             .svg-map-grid-item{
-              width:90%;
-              max-width:1000px;
+              width:95%;
+              max-width:1100px;
             }
 
             li{
