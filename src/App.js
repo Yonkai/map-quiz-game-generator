@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PlainMapTest from "./custom-map-test/plain-map-test/index";
+import Morytania from "./custom-map-test/Morytania/index";
 import usa from '@svg-maps/usa'
 import { CheckboxSVGMap } from "react-svg-map";
 import shuffle from 'lodash/shuffle'
@@ -205,7 +205,7 @@ class App extends Component {
           <span>{`${this.state.guessThis}`}</span>
         </ReactTooltip> : null }
         {/* {this.state.map()} */}
-        <CheckboxSVGMap key={this.state.SVGMapKey} ref={this.svgMap} map={PlainMapTest} onChange={(locations) => this.handleMapRegionClick(locations)}/>
+        <CheckboxSVGMap key={this.state.SVGMapKey} ref={this.svgMap} map={Morytania} onChange={(locations) => this.handleMapRegionClick(locations)}/>
           <p>{`Score: ${this.state.currentGameScore}`}</p>
         <Timer
         initialTime={0}
