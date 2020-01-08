@@ -265,7 +265,7 @@ class App extends Component {
               stroke-linejoin: round; }
               .svg-map__location {
                 fill: white;
-                cursor: pointer; 
+                cursor: pointer;
               }
                 .svg-map__location:focus{
                   fill:white;
