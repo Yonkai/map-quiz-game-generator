@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Morytania from "./custom-maps/Morytania/index";
+import TestMap from "./custom-maps/plain-map-test/index";
 import { CheckboxSVGMap } from "react-svg-map";
 import shuffle from 'lodash/shuffle'
 import difference from 'lodash/difference'
@@ -25,7 +26,7 @@ class App extends Component {
       currentGameScore:0,
       gameStarted:false,
       gameFinished: false,
-      guidePlayerMessage:'Click Start to begin.',
+      guidePlayerMessage:'Click Start to play',
       guessThis:'',
       SVGMapKey: 123456789
     }
@@ -194,34 +195,31 @@ class App extends Component {
   render() {
     return (
     <div className='main-container'>
-        <div className='svg-map-grid-item' data-tip data-for='svgMapItem' >
+      <div className='main-game-control-features-container'>
+          <div className='control-item-1 guide-player'>
+              <p>{this.state.guidePlayerMessage}</p>
+          </div>
+
+          <div className='control-item-2 start-button'>
+            <button onClick={()=>{this.initiateMapGame();}}>Start</button> 
+          </div>
+
+          <div className='control-item-3 reset-button'>   
+              <button onClick={()=>{this.resetMapGame();}}>Reset</button>
+          </div>
+          <div className='control-item-4 score-container'>
+            <p>{`Score: ${this.state.currentGameScore}`}</p>
+          </div>
+          <div className='control-item-4 score-container'>
+          </div>
+        </div>
         {this.state.guessThis !== '' ? <ReactTooltip id='svgMapItem' place="right" type="success">
           <span>{`${this.state.guessThis}`}</span>
         </ReactTooltip> : null }
+
+        <div className='svg-map-grid-item' data-tip data-for='svgMapItem' >
         {/* {this.state.map()} */}
         <CheckboxSVGMap key={this.state.SVGMapKey} ref={this.svgMap} map={Morytania} onChange={(locations) => this.handleMapRegionClick(locations)}/>
-          <p>{`Score: ${this.state.currentGameScore}`}</p>
-        <Timer
-        initialTime={0}
-        startImmediately={false}
-    >
-    {({ start, resume, pause, stop, reset, timerState, initiateMapGame }) => (
-            <React.Fragment>
-                <div>
-                    <Timer.Minutes /> min : 
-                    <Timer.Seconds /> sec
-                </div>
-                {/* <div>{timerState}</div> */}
-                <br />
-                <div>
-                  {/* Note to self: I thought the correct context was this.props not this.. oops. */}
-                    <button onClick={()=>{this.initiateMapGame();start();}}>Start</button>
-                    <button onClick={()=>{this.resetMapGame();reset();stop();}}>Reset</button>
-                </div>
-            </React.Fragment>
-        )}
-    </Timer>
-          <p>{this.state.guidePlayerMessage}</p>
           {/* TODO steps for setting up with test-map:
               1. Each area intitially starts out same color representing not gussed yet. (green) 1
               1.5 Start button initiates the game, initating various state values like the timer, score, guess order array, and more? 1
@@ -254,10 +252,12 @@ class App extends Component {
               width: 100%;
               height: auto;
               stroke: black;
-              border:1px solid black;
               stroke-linecap: round;
               stroke-linejoin: round; 
-              background:#0050ffa6;
+              background: #EECDA3;  /* fallback for old browsers */
+              background: -webkit-linear-gradient(to right, #EF629F, #EECDA3);  /* Chrome 10-25, Safari 5.1-6 */
+              background: linear-gradient(to bottom, #EF629F, #EECDA3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+              
               
             }
               .svg-map__location {
@@ -270,7 +270,9 @@ class App extends Component {
                 }
                 
             body{
-              background:white;
+              background: #16BFFD;  /* fallback for old browsers */
+              background: -webkit-linear-gradient(to right, #CB3066, #16BFFD);  /* Chrome 10-25, Safari 5.1-6 */
+              background: linear-gradient(to right, #CB3066, #16BFFD); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
             }
 
             .main-container{
@@ -291,18 +293,52 @@ class App extends Component {
             }
 
             h1{
-              font-size:26px;
-              width: 100%; 
-              justify-self:start;
               background:white;
-              margin-top:3px;
-              margin-bottom:0;
-              text-align:center;
+              margin-top:0px;
+              margin-bottom:0px;
+              margin-left:25px;
+            }
+            .header-container-item{
+              justify-self:start;
+            }
+            p{
+              color:yellow;
+              font-size:20px;
+              margin:0;
+            }
+            
+            button{
+              font-size:22px;
+              width:100%;
+    
             }
 
-            p{
-              color:black;
-              margin:0;
+            .main-game-control-features-container {
+              padding: 0;
+              margin: 0;
+              list-style: none;
+              
+              display: -webkit-box;
+              display: -moz-box;
+              display: -ms-flexbox;
+              display: -webkit-flex;
+              display: grid;
+              grid-template-columns:1fr 1fr;
+              width:95%;
+              grid-auto-columns:1fr;
+              max-width:1100px;
+            }
+            
+            .control-item-1,.control-item-2,.control-item-3,.control-item-4 {
+              width:100%;
+              background:black;
+            }
+
+            .control-item-1,control-item-4{
+              grid-column: 1 / span 2;
+              font-size:20px;
+              justify-self:start;
+
             }
 
     `}</style>
