@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import Morytania from "./custom-map-test/Morytania/index";
-import usa from '@svg-maps/usa'
+import Morytania from "./custom-maps/Morytania/index";
 import { CheckboxSVGMap } from "react-svg-map";
 import shuffle from 'lodash/shuffle'
 import difference from 'lodash/difference'
@@ -191,11 +190,6 @@ class App extends Component {
         }));
     }
 
-    isLocationSelected(location,index){
-      console.log('test')
-      return true;
-    }
-
     //TODO: End-game and start-game are broken... examine that logic. Add gate to prevent beginning logic? race conditions??
   render() {
     return (
@@ -262,7 +256,10 @@ class App extends Component {
               stroke: black;
               border:1px solid black;
               stroke-linecap: round;
-              stroke-linejoin: round; }
+              stroke-linejoin: round; 
+              background:#0050ffa6;
+              
+            }
               .svg-map__location {
                 fill: white;
                 cursor: pointer;
@@ -311,7 +308,7 @@ class App extends Component {
     `}</style>
       <style jsx>{`
           ${`.svg-map__location:hover {
-            fill: ${this.state.gameStarted ? `lightgreen`:`red`};
+            fill: ${this.state.gameStarted ? `#72d54c`:`#af1414`};
             outline: 0; 
           }`}
           

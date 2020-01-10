@@ -6,7 +6,7 @@ const generateAlreadyCorrectlyGuessedMapRegionsCSSRules = (correctGuesses) => {
     console.log(correctGuesses, 'correct guesses assembled during the main game, used here for generated styles with each state update.')
     // Make css rules up based on correct guesses if any correct guesses have been made thus far
     const generatedCSS = correctGuesses.length ? correctGuesses.map((correctGuess,index) => {
-        return `#${correctGuess}{fill:darkgreen}`
+        return `#${correctGuess}{fill:#288205}`
     }) : ``
     // Use lodash to convert the mapped array into a string
     const assembledGeneratedCSS = join(generatedCSS, ' ');
