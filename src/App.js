@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 
 // React-svg maps, svg-maps, custom maps
 import Morytania from "./custom-maps/Morytania/index";
+import free2play from './custom-maps/Free-To-Play-OP/index';
 import TestMap from "./custom-maps/plain-map-test/index";
 import { CheckboxSVGMap } from "react-svg-map";
 
@@ -40,7 +41,7 @@ class App extends Component {
       SVGMapKey: 123456789,
       SVGMap: Morytania
     }
-    
+
       // This binding is necessary to make `this` work in the callback
       this.handleMapRegionClick = this.handleMapRegionClick.bind(this);
       this.initiateMapGame= this.initiateMapGame.bind(this);
@@ -81,7 +82,7 @@ class App extends Component {
         console.log('An item has been removed')
         }
         else {
-          console.error('error')
+          console.error('Something went wrong trying to see if an item was removed or added.')
         }
         
         this.setState(prevState => ({
@@ -179,7 +180,6 @@ class App extends Component {
             alreadyCorrectlyGuessedMapRegions:'initialValue',
             lastIncorrectGuess:'initialValue',
             SVGMapKey:newSvgMapKey
-            
           }));
       }
     }
@@ -209,12 +209,16 @@ class App extends Component {
       let nextSVGMap;
 
       // Fake enum based on argument from buttons, should formalized this if I add lots of maps.
+      // TODO: Can definiteeely compoisition this out into a seperate component for clean execution.
       switch(nextMap) {
         case 'morytania':
           nextSVGMap = Morytania
           break;
         case 'TestMap':
           nextSVGMap = TestMap
+          break;
+        case 'free2play':
+          nextSVGMap = free2play;
           break;
         default:
           nextSVGMap = Morytania;
@@ -305,6 +309,7 @@ class App extends Component {
           */}
           <div className="bottom-nav">
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('morytania')}>Play Morytania</button>
+            <button className="bottom-nav-item" onClick={() => this.switchMapGame('free2play')}>Play F2P OG</button>
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('TestMap')}>Play TestMap74</button>
             <a href='https://github.com' className="bottom-nav-item source-code-anchor">Source code</a>
           </div>
@@ -326,6 +331,7 @@ class App extends Component {
               background: -webkit-linear-gradient(to right, #EF629F, #EECDA3);  /* Chrome 10-25, Safari 5.1-6 */
               background: linear-gradient(to bottom, #EF629F, #EECDA3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
               max-height:85vh;
+
             }
 
             .svg-map__location {
