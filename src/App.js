@@ -1,16 +1,25 @@
+// React
 import React, { Component } from 'react';
+
+// React-svg maps, svg-maps, custom maps
 import Morytania from "./custom-maps/Morytania/index";
 import TestMap from "./custom-maps/plain-map-test/index";
 import { CheckboxSVGMap } from "react-svg-map";
+
+//Lodash util functions
 import shuffle from 'lodash/shuffle'
 import difference from 'lodash/difference'
 import union from 'lodash/union'
 import without from 'lodash/without'
+
+//Npm packages
 import Timer from 'react-compound-timer'
 import ReactTooltip from 'react-tooltip'
+import uuidv4 from 'uuid/v4';
+
+//Util. functions
 import generateAlreadyCorrectlyGuessedMapRegionsCSSRules from './util/generateAlreadyCorrectlyGuessedMapRegionsCSSRules'
 import generateLastIncorrectlyGuessedMapRegionsCSSRules from './util/generateLastIncorrectlyGuessedMapRegionsCSSRules'
-import uuidv4 from 'uuid/v4';
 
 class App extends Component {
   constructor(props) {
@@ -315,6 +324,7 @@ class App extends Component {
               background: #EECDA3;  /* fallback for old browsers */
               background: -webkit-linear-gradient(to right, #EF629F, #EECDA3);  /* Chrome 10-25, Safari 5.1-6 */
               background: linear-gradient(to bottom, #EF629F, #EECDA3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+              max-height:85vh;
             }
 
             .svg-map__location {
