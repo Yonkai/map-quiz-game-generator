@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import Morytania from "./custom-maps/Morytania/index";
 import free2play from './custom-maps/Free-To-Play-OP/index';
 import TestMap from "./custom-maps/plain-map-test/index";
+import USA from "./custom-maps/USA/index"
 import { CheckboxSVGMap } from "react-svg-map";
 
 //Lodash util functions
@@ -226,6 +227,9 @@ class App extends Component {
         case 'free2play':
           nextSVGMap = free2play;
           break;
+        case 'USA':
+          nextSVGMap = USA;
+          break;
         default:
           nextSVGMap = Morytania;
           console.error('Something went wrong assigning svg map value')
@@ -317,7 +321,8 @@ class App extends Component {
           <div className="bottom-nav">
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('morytania')}>Play Morytania</button>
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('free2play')}>Play F2P</button>
-            <button className="bottom-nav-item" onClick={() => this.switchMapGame('TestMap')}>Play TestMap74</button>
+            <button className="bottom-nav-item" onClick={() => this.switchMapGame('TestMap')}>Play Polygon-Realm</button>
+            <button className="bottom-nav-item" onClick={() => this.switchMapGame('USA')}>Play USA</button>
             <a href='https://github.com' className="bottom-nav-item source-code-anchor">Source code</a>
           </div>
           <ul>
