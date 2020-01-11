@@ -321,10 +321,10 @@ class App extends Component {
             <a href='https://github.com' className="bottom-nav-item source-code-anchor">Source code</a>
           </div>
           <ul>
-          {/* set key props here: */}
-          {this.state.regionsClicked.map((name,index)=>{
+          {/* shows guesses from state: */}
+          {/* {this.state.regionsClicked.map((name,index)=>{
             return <li>,'{name}',</li>
-          })}
+          })} */}
           </ul>
 
         <style jsx>{`
@@ -347,7 +347,7 @@ class App extends Component {
             }
 
             .svg-map__location:focus{
-              fill:purple;
+              fill:white;
               outline:0;
             }
                 
