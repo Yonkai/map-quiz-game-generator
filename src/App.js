@@ -40,6 +40,7 @@ class App extends Component {
       SVGMapKey: 123456789,
       SVGMap: Morytania
     }
+    
       // This binding is necessary to make `this` work in the callback
       this.handleMapRegionClick = this.handleMapRegionClick.bind(this);
       this.initiateMapGame= this.initiateMapGame.bind(this);

@@ -1,3 +1,20 @@
+## How to create custom map quizes
+
+1. Select game map section
+2. Load into inkscape as unique layer
+3. Set opacity of that layer to transparent value
+4. Trace over path section with path
+5. Export to SVG
+6. Follow steps [here, 'Adding a Map'](https://github.com/VictorCazanave/svg-maps/blob/master/CONTRIBUTING.md) here to convert to useable json for react-svg-maps
+7. Put index in custom-maps directory
+8. Add code to switch section of switch map function alongside button to take that argument
+
+## How to play
+
+1. Start button begins new game
+2. Flashing grey/black = wrong guess
+3. Dark green  = correct guess
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
