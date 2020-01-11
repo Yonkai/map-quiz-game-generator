@@ -25,7 +25,7 @@ import generateLastIncorrectlyGuessedMapRegionsCSSRules from './util/generateLas
 class App extends Component {
   constructor(props) {
     super(props);
-    this.gameScoreIncrement = 555;
+    this.gameScoreIncrement = 1;
 
     this.state = { 
       regionsClicked:[],
@@ -39,6 +39,7 @@ class App extends Component {
       guidePlayerMessage:'Click Start to play',
       guessThis:'',
       SVGMapKey: 123456789,
+      totalMapPieces:0,
       SVGMap: Morytania
     }
 
@@ -159,6 +160,9 @@ class App extends Component {
           // Declare constant for all area names 
           const allAreaNames = this.svgMap.current.props.map.locations.map((obj,index)=>{return obj.name})
           console.log(this.svgMap.current)
+
+          // Get total number of map pieces for this map
+          const mapPieceCount = allAreaNames.length;
           
           //reset all aria-checked to false
           const shuffledAreaNames = shuffle(allAreaNames)
@@ -179,6 +183,7 @@ class App extends Component {
             gameStarted:true,
             alreadyCorrectlyGuessedMapRegions:'initialValue',
             lastIncorrectGuess:'initialValue',
+            totalMapPieces:mapPieceCount,
             SVGMapKey:newSvgMapKey
           }));
       }
@@ -199,7 +204,8 @@ class App extends Component {
           gameFinished: false,
           guidePlayerMessage:'Click Start to begin.',
           guessThis:'',
-          SVGMapKey:newSvgMapKey
+          SVGMapKey:newSvgMapKey,
+          totalMapPieces:0
         }));
     }
 
@@ -239,7 +245,8 @@ class App extends Component {
           guidePlayerMessage:'Click Start to begin.',
           guessThis:'',
           SVGMapKey:newSvgMapKey,
-          SVGMap: nextSVGMap
+          SVGMap: nextSVGMap,
+          totalMapPieces:0
         }));
     }
 
@@ -267,7 +274,7 @@ class App extends Component {
               </div>
 
               <div className='control-item-4 score-container'>
-                <p>{`Score: ${this.state.currentGameScore}`}</p>
+                <p>{`Score: ${this.state.currentGameScore} / ${this.state.totalMapPieces}`}</p>
               </div>
               {/* Timer: */}
               <div className='control-item-5 timer'>
@@ -309,7 +316,7 @@ class App extends Component {
           */}
           <div className="bottom-nav">
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('morytania')}>Play Morytania</button>
-            <button className="bottom-nav-item" onClick={() => this.switchMapGame('free2play')}>Play F2P OG</button>
+            <button className="bottom-nav-item" onClick={() => this.switchMapGame('free2play')}>Play F2P</button>
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('TestMap')}>Play TestMap74</button>
             <a href='https://github.com' className="bottom-nav-item source-code-anchor">Source code</a>
           </div>
@@ -340,7 +347,7 @@ class App extends Component {
             }
 
             .svg-map__location:focus{
-              fill:white;
+              fill:purple;
               outline:0;
             }
                 
