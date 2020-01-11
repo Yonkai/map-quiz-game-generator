@@ -10,12 +10,12 @@ import Timer from 'react-compound-timer'
 import ReactTooltip from 'react-tooltip'
 import generateAlreadyCorrectlyGuessedMapRegionsCSSRules from './util/generateAlreadyCorrectlyGuessedMapRegionsCSSRules'
 import generateLastIncorrectlyGuessedMapRegionsCSSRules from './util/generateLastIncorrectlyGuessedMapRegionsCSSRules'
-import uuidv1 from 'uuid/v1';
+import uuidv4 from 'uuid/v4';
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.gameScoreIncrement = 500;
+    this.gameScoreIncrement = 555;
 
     this.state = { 
       regionsClicked:[],
@@ -28,12 +28,14 @@ class App extends Component {
       gameFinished: false,
       guidePlayerMessage:'Click Start to play',
       guessThis:'',
-      SVGMapKey: 123456789
+      SVGMapKey: 123456789,
+      SVGMap: Morytania
     }
       // This binding is necessary to make `this` work in the callback
       this.handleMapRegionClick = this.handleMapRegionClick.bind(this);
       this.initiateMapGame= this.initiateMapGame.bind(this);
       this.resetMapGame= this.resetMapGame.bind(this);
+      this.switchMapGame = this.switchMapGame.bind(this);
       this.svgMap = React.createRef();
     }
   
@@ -154,7 +156,7 @@ class App extends Component {
           const initGuessThis = shuffledAreaNames[0]
 
           // Generate new svgmap key
-          const newSvgMapKey = uuidv1()
+          const newSvgMapKey = uuidv4()
 
           // Set shuffled guess list, initial guess, guide message, and game start flag to state.
           // Remount the svgmap component by changing the key so the aria-checkeds reset
@@ -174,7 +176,7 @@ class App extends Component {
 
     resetMapGame(){
       // Generate new SVG Map key to remount svg map component so that the aria-checkeds reset.
-      const newSvgMapKey = uuidv1();
+      const newSvgMapKey = uuidv4();
 
       this.setState(prevState => ({
           regionsClicked:[],
@@ -191,27 +193,78 @@ class App extends Component {
         }));
     }
 
-    //TODO: End-game and start-game are broken... examine that logic. Add gate to prevent beginning logic? race conditions??
+    switchMapGame(nextMap){
+      // Generate new SVG Map key to remount svg map component so that the aria-checkeds reset.
+      const newSvgMapKey = uuidv4();
+      let nextSVGMap;
+
+      // Fake enum based on argument from buttons, should formalized this if I add lots of maps.
+      switch(nextMap) {
+        case 'morytania':
+          nextSVGMap = Morytania
+          break;
+        case 'TestMap':
+          nextSVGMap = TestMap
+          break;
+        default:
+          nextSVGMap = Morytania;
+          console.error('Something went wrong assigning svg map value')
+      }
+
+      // Note that only this one changes the state value for the SVGMap because the default is an actual map option
+      // instead of "nothing."
+      this.setState(prevState => ({
+          regionsClicked:[],
+          lastRegionClicked:[],
+          shuffledGuessList:false,
+          alreadyCorrectlyGuessedMapRegions:'initialValue',
+          lastIncorrectGuess:'initialValue',
+          currentGameScore:0,
+          gameStarted:false,
+          gameFinished: false,
+          guidePlayerMessage:'Click Start to begin.',
+          guessThis:'',
+          SVGMapKey:newSvgMapKey,
+          SVGMap: nextSVGMap
+        }));
+    }
+
   render() {
     return (
     <div className='main-container'>
       <div className='main-game-control-features-container'>
+
           <div className='control-item-1 guide-player'>
               <p>{this.state.guidePlayerMessage}</p>
           </div>
 
-          <div className='control-item-2 start-button'>
-            <button onClick={()=>{this.initiateMapGame();}}>Start</button> 
-          </div>
+          <Timer
+              initialTime={0}
+              startImmediately={false}
+              >
+            {({ start, resume, pause, stop, reset, timerState }) => (
+            <>
+              <div className='control-item-2 start-button'>
+                <button onClick={()=>{this.initiateMapGame();start();}}>Start</button> 
+              </div>
 
-          <div className='control-item-3 reset-button'>   
-              <button onClick={()=>{this.resetMapGame();}}>Reset</button>
-          </div>
-          <div className='control-item-4 score-container'>
-            <p>{`Score: ${this.state.currentGameScore}`}</p>
-          </div>
-          <div className='control-item-4 score-container'>
-          </div>
+              <div className='control-item-3 reset-button'>   
+                  <button onClick={()=>{this.resetMapGame();reset();stop();}}>Reset</button>
+              </div>
+
+              <div className='control-item-4 score-container'>
+                <p>{`Score: ${this.state.currentGameScore}`}</p>
+              </div>
+              {/* Timer: */}
+              <div className='control-item-5 timer'>
+                      <p className='the-timer'>
+                          <Timer.Minutes />:
+                          <Timer.Seconds /> 
+                      </p>
+              </div>
+            </>
+            )}
+            </Timer>
         </div>
         {this.state.guessThis !== '' ? <ReactTooltip id='svgMapItem' place="right" type="success">
           <span>{`${this.state.guessThis}`}</span>
@@ -219,15 +272,15 @@ class App extends Component {
 
         <div className='svg-map-grid-item' data-tip data-for='svgMapItem' >
         {/* {this.state.map()} */}
-        <CheckboxSVGMap key={this.state.SVGMapKey} ref={this.svgMap} map={Morytania} onChange={(locations) => this.handleMapRegionClick(locations)}/>
+        <CheckboxSVGMap key={this.state.SVGMapKey} ref={this.svgMap} map={this.state.SVGMap} onChange={(locations) => this.handleMapRegionClick(locations)}/>
           {/* TODO steps for setting up with test-map:
               1. Each area intitially starts out same color representing not gussed yet. (green) 1
               1.5 Start button initiates the game, initating various state values like the timer, score, guess order array, and more? 1
-              6. A name appears over the area if it is incorrectly guessed, showings its name. 0
-              7. The name that needs to be guessed follows the cursor. 0
+              6. A name appears over the area if it is incorrectly guessed, showings its name. 1
+              7. The name that needs to be guessed follows the cursor. 1
               8. After every area has been given a correct guess a popover(modal?) appears and shows the score
                  and ranking, the game is set back to the initial state after the user clicks away via. reset function
-              9. Reset button can reset everything to initial state 0
+              9. Reset button can reset everything to initial state 1
 
               ---------
               Needed map color condition states, add text messages alongside to guide player:
@@ -240,6 +293,11 @@ class App extends Component {
               - A region is checked after start button has been hit and the guess is incorrect: that region flashes its name quickly
               above the region of the click for 1 second before going back to solid white until the end game where it is reset
           */}
+          <div className="bottom-nav">
+            <button className="bottom-nav-item" onClick={() => this.switchMapGame('morytania')}>Play Morytania</button>
+            <button className="bottom-nav-item" onClick={() => this.switchMapGame('TestMap')}>Play TestMap74</button>
+            <a href='https://github.com' className="bottom-nav-item source-code-anchor">Source code</a>
+          </div>
           <ul>
           {/* set key props here: */}
           {this.state.regionsClicked.map((name,index)=>{
@@ -257,17 +315,17 @@ class App extends Component {
               background: #EECDA3;  /* fallback for old browsers */
               background: -webkit-linear-gradient(to right, #EF629F, #EECDA3);  /* Chrome 10-25, Safari 5.1-6 */
               background: linear-gradient(to bottom, #EF629F, #EECDA3); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-              
-              
             }
-              .svg-map__location {
-                fill: white;
-                cursor: pointer;
-              }
-                .svg-map__location:focus{
-                  fill:white;
-                  outline:0;
-                }
+
+            .svg-map__location {
+              fill: white;
+              cursor: pointer;
+            }
+
+            .svg-map__location:focus{
+              fill:white;
+              outline:0;
+            }
                 
             body{
               background: #16BFFD;  /* fallback for old browsers */
@@ -298,9 +356,11 @@ class App extends Component {
               margin-bottom:0px;
               margin-left:25px;
             }
+
             .header-container-item{
               justify-self:start;
             }
+
             p{
               color:yellow;
               font-size:20px;
@@ -310,7 +370,8 @@ class App extends Component {
             button{
               font-size:22px;
               width:100%;
-    
+              margin:0;
+              padding:0;
             }
 
             .main-game-control-features-container {
@@ -329,18 +390,41 @@ class App extends Component {
               max-width:1100px;
             }
             
-            .control-item-1,.control-item-2,.control-item-3,.control-item-4 {
+            .control-item-1,.control-item-2,.control-item-3,.control-item-4,.control-item-5 {
               width:100%;
               background:black;
             }
 
             .control-item-1,control-item-4{
               grid-column: 1 / span 2;
-              font-size:20px;
+              font-size:22px;
               justify-self:start;
-
             }
 
+            .the-timer{
+              font-size:22px;
+              color:white;
+            }
+
+            .bottom-nav{
+              padding: 0;
+              margin: 0;
+              list-style: none;
+              display:grid;
+              grid-template-columns:1fr 1fr 1fr;
+              grid-gap:10px;
+            }
+
+            .bottom-nav-item{
+              font-size:18px;
+              font-variant:small-caps;
+            }
+
+            .source-code-anchor{
+              background:white;
+              font-variant:small-caps;
+              text-align:center;
+            }
     `}</style>
       <style jsx>{`
           ${`.svg-map__location:hover {
