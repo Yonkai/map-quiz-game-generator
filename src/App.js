@@ -323,7 +323,7 @@ class App extends Component {
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('free2play')}>Play F2P</button>
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('TestMap')}>Play Polygon-Realm</button>
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('USA')}>Play USA</button>
-            <a href='https://github.com' className="bottom-nav-item source-code-anchor">Source code</a>
+            <a href='https://github.com/Yonkai/map-quiz-game-generator' className="bottom-nav-item source-code-anchor">Source code</a>
           </div>
           <ul>
           {/* shows guesses from state: */}
