@@ -19,7 +19,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Live Site
-[Osrsmapquiz.com](osrsmapquiz.com)
+[osrsmapquiz.com](https://osrsmapquiz.com)
 
 ## Available Scripts
 
