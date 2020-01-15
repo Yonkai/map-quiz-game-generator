@@ -10,11 +10,16 @@
 1. Put index in custom-maps directory
 1. Add code to switch section of switch map function alongside button to take that argument
 
+## Useful Resources
+[Inkscape, SVG editor](https://inkscape.org)
+[MDN page on SVG](https://developer.mozilla.org/en-US/docs/Web/SVG)
+
+
 ## How to play
 
 1. Start button begins new game
-2. Flashing grey/black = wrong guess
-3. Dark green  = correct guess
+1. Flashing grey/black = wrong guess
+1. Dark green  = correct guess
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
