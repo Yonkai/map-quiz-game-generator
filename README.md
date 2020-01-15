@@ -11,7 +11,8 @@
 1. Add code to switch section of switch map function alongside button to take that argument
 
 ## Useful Resources
-[Inkscape, SVG editor](https://inkscape.org)
+[Inkscape, SVG editor](https://inkscape.org) 
+
 [MDN page on SVG](https://developer.mozilla.org/en-US/docs/Web/SVG)
 
 
