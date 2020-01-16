@@ -37,7 +37,7 @@ class App extends Component {
       currentGameScore:0,
       gameStarted:false,
       gameFinished: false,
-      guidePlayerMessage:'Click Start to play',
+      guidePlayerMessage:'start to play!',
       guessThis:'',
       SVGMapKey: 123456789,
       totalMapPieces:0,
@@ -123,7 +123,7 @@ class App extends Component {
           // FIFO selection style
           const nextGuessThis = updatedShuffleGuessList[0] ? updatedShuffleGuessList[0] : 'nothing, game done.'
           // 3. update the guidePlayerMessage based on the newly selected guessThis state value vis the newly changed shuffleGuessList
-          const nextGuidePlayerMessage = `Click on ${nextGuessThis}`
+          const nextGuidePlayerMessage = `${nextGuessThis}`
           // 4. update array that contains all the already correctly guessed map regions in order to dynamically render the dark green coloring in the CSS
           const nextAlreadyCorrectlyGuessedMapRegions = union(this.state.alreadyCorrectlyGuessedMapRegions, this.state.lastRegionClicked)
 
@@ -180,7 +180,7 @@ class App extends Component {
           this.setState(prevState => ({
             shuffledGuessList: shuffledAreaNames,
             guessThis:initGuessThis,
-            guidePlayerMessage:`Click on ${initGuessThis}`,
+            guidePlayerMessage:`${initGuessThis}`,
             gameStarted:true,
             alreadyCorrectlyGuessedMapRegions:'initialValue',
             lastIncorrectGuess:'initialValue',
@@ -203,7 +203,7 @@ class App extends Component {
           currentGameScore:0,
           gameStarted:false,
           gameFinished: false,
-          guidePlayerMessage:'Click Start to begin.',
+          guidePlayerMessage:'start to begin!',
           guessThis:'',
           SVGMapKey:newSvgMapKey,
           totalMapPieces:0
@@ -246,7 +246,7 @@ class App extends Component {
           currentGameScore:0,
           gameStarted:false,
           gameFinished: false,
-          guidePlayerMessage:'Click Start to begin.',
+          guidePlayerMessage:'start to go!',
           guessThis:'',
           SVGMapKey:newSvgMapKey,
           SVGMap: nextSVGMap,
@@ -260,7 +260,7 @@ class App extends Component {
       <div className='main-game-control-features-container'>
 
           <div className='control-item-1 guide-player'>
-              <p>{this.state.guidePlayerMessage}</p>
+              <p className='player-guide-message'>Click on <span style={{color:'#ba9dff'}}>{this.state.guidePlayerMessage}</span></p>
           </div>
 
           <Timer
@@ -269,12 +269,12 @@ class App extends Component {
               >
             {({ start, resume, pause, stop, reset, timerState }) => (
             <>
-              <div className='control-item-2 start-button'>
-                <button onClick={()=>{this.initiateMapGame();start();}}>Start</button> 
+              <div className='control-item-2 start'>
+                <button className='start-button' onClick={()=>{this.initiateMapGame();start();}}>Start</button> 
               </div>
 
-              <div className='control-item-3 reset-button'>   
-                  <button onClick={()=>{this.resetMapGame();reset();stop();}}>Reset</button>
+              <div className='control-item-3 reset'>   
+                  <button className='reset-button' onClick={()=>{this.resetMapGame();reset();stop();}}>Reset</button>
               </div>
 
               <div className='control-item-4 score-container'>
@@ -441,18 +441,30 @@ class App extends Component {
               list-style: none;
               display:grid;
               grid-template-columns:1fr 1fr 1fr;
-              grid-gap:10px;
+              grid-gap:5px;
+              
             }
 
             .bottom-nav-item{
               font-size:18px;
-              font-variant:small-caps;
+              font-family:monospace;
+              font-weight:bold;
             }
 
             .source-code-anchor{
               background:white;
               font-variant:small-caps;
               text-align:center;
+            }
+
+            .start-button, .reset-button{
+              font-family:monospace;
+              font-weight:bold;
+            }
+
+            .player-guide-message{
+              font-family:sans-serif;
+              margin:3px;
             }
     `}</style>
       <style jsx>{`
