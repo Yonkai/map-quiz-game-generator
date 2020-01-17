@@ -34,3 +34,5 @@ import App from './App';
 //TODO test: Make sure that the string interpolation util functions return expected output for given expected inputs
 
 //TODO play through thousands/millions of games to check for errors programmitcally.
+
+//TODO Make sure that timer resets
