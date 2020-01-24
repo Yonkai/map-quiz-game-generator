@@ -20,7 +20,8 @@
 
 1. Start button begins new game
 1. Flashing grey/black = wrong guess
-1. Dark green  = correct guess
+1. Dark green = correct guess
+1. A correct guess is 1 point, incorrect is -1, max points is total map paths. 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
