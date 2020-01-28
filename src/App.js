@@ -318,6 +318,7 @@ class App extends Component {
               - A region is checked after start button has been hit and the guess is incorrect: that region flashes its name quickly
               above the region of the click for 1 second before going back to solid white until the end game where it is reset
           */}
+          {/* TODO: Add a better more compact menu. Accordian?*/}
           <div className="bottom-nav">
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('morytania')}>Play Morytania</button>
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('free2play')}>Play F2P</button>
