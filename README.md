@@ -28,6 +28,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 ## Live Site
 [osrsmapquiz.com](https://osrsmapquiz.com)
 
+
+## Contributing
+Fele free to open a pull request or submit an issue! 👍😀
+
 ## Available Scripts
 
 In the project directory, you can run:
