@@ -23,6 +23,10 @@ import uuidv4 from 'uuid/v4';
 import generateAlreadyCorrectlyGuessedMapRegionsCSSRules from './util/generateAlreadyCorrectlyGuessedMapRegionsCSSRules'
 import generateLastIncorrectlyGuessedMapRegionsCSSRules from './util/generateLastIncorrectlyGuessedMapRegionsCSSRules'
 
+//Material-UI Simple Menu
+//https://material-ui.com/components/menus/
+import MUIMenu from './materialUIMenu'
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -324,7 +328,8 @@ class App extends Component {
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('free2play')}>Play F2P</button>
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('TestMap')}>Play Polygon-Realm</button>
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('USA')}>Play USA</button>
-            <a href='https://github.com/Yonkai/map-quiz-game-generator' className="bottom-nav-item source-code-anchor">Source code</a>
+            <MUIMenu/>
+            <a href='https://github.com/Yonkai/map-quiz-game-generator' className="bottom-nav-item source-code-anchor"> Source code</a>
           </div>
           <ul>
           {/* shows guesses from state: */}

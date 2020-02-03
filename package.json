@@ -46,6 +46,7 @@
     ]
   },
   "devDependencies": {
+    "@material-ui/core": "^4.9.1",
     "babel-plugin-macros": "^2.8.0"
   },
   "homepage": "https://osrsmapquiz.com"
