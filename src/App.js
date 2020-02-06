@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 
 // React-svg maps, svg-maps, custom maps
+//TODO: More game maps
 import Morytania from "./custom-maps/Morytania/index";
 import free2play from './custom-maps/Free-To-Play-OP/index';
 import TestMap from "./custom-maps/plain-map-test/index";
