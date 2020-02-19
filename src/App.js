@@ -326,6 +326,10 @@ class App extends Component {
           <div className="bottom-nav">
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('morytania')}>Play Morytania</button>
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('free2play')}>Play F2P</button>
+            <button className="bottom-nav-item" onClick={() => this.switchMapGame('free2play')}>Play Great Kourend</button>
+            <button className="bottom-nav-item" onClick={() => this.switchMapGame('free2play')}>Play Wilderness</button>
+            <button className="bottom-nav-item" onClick={() => this.switchMapGame('free2play')}>Play Kanadarin</button>
+            <button className="bottom-nav-item" onClick={() => this.switchMapGame('free2play')}>Play Zelda</button>
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('TestMap')}>Play Polygon-Realm</button>
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('USA')}>Play USA</button>
             <MUIMenu/>
