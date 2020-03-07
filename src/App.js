@@ -3,11 +3,12 @@ import React, { Component } from 'react';
 
 // React-svg maps, svg-maps, custom maps
 //TODO: More game maps
-import Morytania from "./custom-maps/Morytania/index";
-import free2play from './custom-maps/Free-To-Play-OP/index';
-import TestMap from "./custom-maps/plain-map-test/index";
+import Morytania from "./custom-maps/Morytania/index"
+import free2play from './custom-maps/Free-To-Play-OP/index'
+import TestMap from "./custom-maps/plain-map-test/index"
 import USA from "./custom-maps/USA/index"
-import { CheckboxSVGMap } from "react-svg-map";
+import China from "./custom-maps/China/index"
+import { CheckboxSVGMap } from "react-svg-map"
 
 //Lodash util functions
 import shuffle from 'lodash/shuffle'
@@ -235,6 +236,9 @@ class App extends Component {
         case 'USA':
           nextSVGMap = USA;
           break;
+        case 'China':
+          nextSVGMap = China;
+          break;
         default:
           nextSVGMap = Morytania;
           console.error('Something went wrong assigning svg map value')
@@ -333,6 +337,7 @@ class App extends Component {
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('free2play')}>Play Zelda</button>
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('TestMap')}>Play Polygon-Realm</button>
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('USA')}>Play USA</button>
+            <button className="bottom-nav-item" onClick={() => this.switchMapGame('China')}>Play China</button>
             <MUIMenu/>
             <a href='https://github.com/Yonkai/map-quiz-game-generator' className="bottom-nav-item source-code-anchor"> Source code</a>
           </div>
