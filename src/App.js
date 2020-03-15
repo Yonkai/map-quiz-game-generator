@@ -12,6 +12,7 @@ import Canada from './custom-maps/Canada/index'
 import Austrailia from './custom-maps/Austrailia/index'
 import Brazil from './custom-maps/Brazil/index'
 import Germany from './custom-maps/Germany/index'
+import SK from './custom-maps/South-Korea/index.js';
 import { CheckboxSVGMap } from "react-svg-map"
 
 //Lodash util functions
@@ -256,6 +257,9 @@ class App extends Component {
         case 'Germany':
           nextSVGMap = jsonFormatConverter(Germany);
           break;
+        case 'SK':
+          nextSVGMap = jsonFormatConverter(SK);
+          break;
         default:
           nextSVGMap = Morytania;
           console.error('Something went wrong assigning svg map value')
@@ -359,6 +363,7 @@ class App extends Component {
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('Austrailia')}>Play Austrailia</button>
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('Brazil')}>Play Brazil</button>
             <button className="bottom-nav-item" onClick={() => this.switchMapGame('Germany')}>Play Germany</button>
+            <button className="bottom-nav-item" onClick={() => this.switchMapGame('SK')}>Play South Korea</button>
             <MUIMenu/>
             <a href='https://github.com/Yonkai/map-quiz-game-generator' className="bottom-nav-item source-code-anchor"> Source code</a>
           </div>
